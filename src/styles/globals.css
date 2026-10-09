@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-navy: #202331;
+    --color-life-red: #F0443E;
+    --color-choice-blue: #2764D8;
+    --color-warm-ivory: #F5F1E8;
+    --color-dark-bg: #11131C;
+    --color-muted-text: #626776;
+    --color-earth-accent: #8A6048;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-dark-bg text-warm-ivory font-body antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  * {
+    @apply border-navy/20;
+  }
+
+  ::selection {
+    @apply bg-choice-blue/30 text-warm-ivory;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-choice-blue ring-offset-2 ring-offset-dark-bg;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-brand px-5 py-3 font-body font-medium text-body transition-all duration-brand ease-brand focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-dark-bg disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn bg-life-red text-warm-ivory hover:bg-life-red/90 active:bg-life-red/100 focus:ring-life-red;
+  }
+
+  .btn-secondary {
+    @apply btn bg-choice-blue text-warm-ivory hover:bg-choice-blue/90 active:bg-choice-blue/100 focus:ring-choice-blue;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-warm-ivory hover:bg-navy/50 active:bg-navy/70 focus:ring-navy;
+  }
+
+  .btn-outline {
+    @apply btn border-2 border-navy text-navy hover:bg-navy/10 active:bg-navy/20 focus:ring-navy dark:border-choice-blue dark:text-choice-blue dark:hover:bg-choice-blue/10;
+  }
+
+  .input {
+    @apply w-full rounded-brand bg-dark-bg border border-navy/30 px-4 py-3 text-warm-ivory placeholder-muted-text transition-all duration-brand focus:border-choice-blue focus:ring-2 focus:ring-choice-blue/20 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .label {
+    @apply block mb-1.5 font-body font-medium text-body-sm text-warm-ivory;
+  }
+
+  .card {
+    @apply rounded-brand-lg bg-navy/50 border border-navy/20 shadow-brand p-6 transition-all duration-brand;
+  }
+
+  .card-hover {
+    @apply card hover:border-choice-blue/30 hover:shadow-brand-lg;
+  }
+
+  .link {
+    @apply text-choice-blue hover:text-life-red transition-colors duration-brand underline-offset-2 hover:underline;
+  }
+
+  .heading-display {
+    @apply font-display font-bold tracking-tight text-warm-ivory;
+  }
+
+  .heading-lg {
+    @apply font-display font-semibold text-warm-ivory;
+  }
+
+  .text-muted {
+    @apply text-muted-text;
+  }
+
+  .container-game {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-out forwards;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.2s ease-out forwards;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-dark-bg;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-navy/50 rounded-full hover:bg-navy/70;
+}
+
+::-webkit-scrollbar-corner {
+  @apply bg-dark-bg;
+}
