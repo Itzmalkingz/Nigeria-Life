@@ -34,9 +34,9 @@ export default function Header({ isLanding = false }: { isLanding?: boolean }) {
     }`}>
       <div className="container-game">
         <div className="flex h-16 items-center justify-between gap-4">
-          <Link to="/" className="flex items-center gap-2 text-warm-ivory hover:text-life-red transition-colors" aria-label="Nigeria Life Home">
+          <Link to="/" className="flex items-center gap-2 text-warm-ivory hover:text-life-red transition-colors" aria-label="Life in Africa Home">
             <Logo className="w-8 h-8" />
-            <span className="font-display font-bold text-display-sm hidden sm:block">Nigeria Life</span>
+            <span className="font-display font-bold text-display-sm hidden sm:block">Life in Africa</span>
           </Link>
 
           <nav className="hidden md:flex items-center gap-1" aria-label="Main navigation">
@@ -69,8 +69,8 @@ export default function Header({ isLanding = false }: { isLanding?: boolean }) {
                   <span className="text-choice-blue" aria-hidden="true">🏦</span>
                   <span className="font-display font-medium tabular-nums">{formatKoboCompact(3400000)}</span>
                 </div>
-                <button className="btn-ghost text-body-sm" onClick={() => {}}>Profile</button>
-                <button className="btn-outline text-body-sm" onClick={() => {}}>Sign Out</button>
+                <button className="btn-ghost text-body-sm" onClick={() => void 0}>Profile</button>
+                <button className="btn-outline text-body-sm" onClick={() => void 0}>Sign Out</button>
               </div>
             ) : (
               <div className="flex items-center gap-2">

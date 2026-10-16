@@ -78,7 +78,7 @@ export function useGameTime(config: Partial<GameConfig> = {}) {
 
   // Persist to localStorage for demo purposes
   useEffect(() => {
-    const saved = localStorage.getItem('nigeria-life-game-time')
+    const saved = localStorage.getItem('life-in-africa-game-time')
     if (saved) {
       try {
         const parsed = JSON.parse(saved)
@@ -91,7 +91,7 @@ export function useGameTime(config: Partial<GameConfig> = {}) {
 
   useEffect(() => {
     if (state.isRunning) {
-      localStorage.setItem('nigeria-life-game-time', JSON.stringify(state))
+      localStorage.setItem('life-in-africa-game-time', JSON.stringify(state))
     }
   }, [state])
 

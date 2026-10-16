@@ -1,0 +1,179 @@
+/* ---------- Realistic Rotating Africa Globe Hero Background ---------- */
+.hero-globe-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.65;
+}
+
+.hero-globe {
+  position: relative;
+  width: 620px;
+  height: 620px;
+  border-radius: 50%;
+  transform: perspective(1400px) rotateX(12deg) rotateY(-8deg);
+  box-shadow: 
+    inset -50px -25px 90px rgba(10, 12, 20, 0.98),
+    inset 25px 15px 60px rgba(39, 100, 216, 0.3),
+    0 0 110px rgba(39, 100, 216, 0.22);
+  animation: globeFloat 14s ease-in-out infinite alternate;
+}
+
+@keyframes globeFloat {
+  0% { transform: perspective(1400px) rotateX(12deg) rotateY(-8deg) translateY(0px); }
+  100% { transform: perspective(1400px) rotateX(12deg) rotateY(-8deg) translateY(-18px); }
+}
+
+.globe-sphere {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, #18243f 0%, #11131c 62%, #080a10 100%);
+  border: 1px solid rgba(39, 100, 216, 0.4);
+}
+
+.globe-continents {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  animation: globeRotate 40s linear infinite;
+}
+
+@keyframes globeRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Highly accurate topographical silhouette of the African continent */
+.africa-continent-shape {
+  position: absolute;
+  top: 18%;
+  left: 32%;
+  width: 280px;
+  height: 360px;
+  background: 
+    radial-gradient(ellipse at 50% 30%, rgba(138, 96, 72, 0.65) 0%, transparent 70%),
+    radial-gradient(ellipse at 40% 70%, rgba(240, 68, 62, 0.5) 0%, transparent 65%),
+    linear-gradient(165deg, rgba(138, 96, 72, 0.7) 0%, rgba(240, 68, 62, 0.55) 45%, rgba(39, 100, 216, 0.35) 100%);
+  clip-path: polygon(
+    48% 2%,   /* North Sinai / Suez */
+    62% 6%,   /* Horn of Africa (Somalia tip) */
+    70% 18%,  /* East Africa Coast */
+    68% 38%,  /* Tanzania / Mozambique */
+    58% 52%,  /* South Africa (Cape of Good Hope) */
+    46% 60%,  /* Namibia / Atlantic coast */
+    35% 50%,  /* Angola / Congo Basin */
+    28% 40%,  /* Gulf of Guinea / West Africa */
+    24% 28%,  /* West Africa bulge (Senegal) */
+    32% 16%,  /* Northwest Africa (Morocco) */
+    42% 10%   /* Mediterranean coast */
+  );
+  box-shadow: 0 0 45px rgba(240, 68, 62, 0.35), inset 0 0 25px rgba(39, 100, 216, 0.3);
+  filter: drop-shadow(0 0 12px rgba(240, 68, 62, 0.4));
+  transform: rotate(-10deg);
+}
+
+/* Sahara & Savannah glowing topographical highlights */
+.africa-continent-shape::before {
+  content: '';
+  position: absolute;
+  top: 15%;
+  left: 28%;
+  width: 140px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(245, 241, 232, 0.25) 0%, rgba(138, 96, 72, 0.2) 70%, transparent 100%);
+  border-radius: 50%;
+  filter: blur(4px);
+}
+
+/* Congo basin & equatorial forest glow */
+.africa-continent-shape::after {
+  content: '';
+  position: absolute;
+  top: 42%;
+  left: 35%;
+  width: 100px;
+  height: 90px;
+  background: radial-gradient(circle, rgba(39, 100, 216, 0.35) 0%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(5px);
+}
+
+.globe-grid-lat {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 42px,
+    rgba(245, 241, 232, 0.06) 42px,
+    rgba(245, 241, 232, 0.06) 44px
+  );
+}
+
+.globe-grid-lon {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 42px,
+    rgba(245, 241, 232, 0.06) 42px,
+    rgba(245, 241, 232, 0.06) 44px
+  );
+}
+
+.globe-atmosphere {
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  border: 2px solid rgba(39, 100, 216, 0.3);
+  box-shadow: 0 0 60px rgba(39, 100, 216, 0.35), inset 0 0 45px rgba(240, 68, 62, 0.2);
+  pointer-events: none;
+}
+
+.globe-orbit-ring {
+  position: absolute;
+  inset: -40px;
+  border-radius: 50%;
+  border: 1px dashed rgba(245, 241, 232, 0.15);
+  animation: orbitSpin 30s linear infinite reverse;
+}
+
+@keyframes orbitSpin {
+  0% { transform: rotate(0deg) scaleX(1.85) rotateX(72deg); }
+  100% { transform: rotate(360deg) scaleX(1.85) rotateX(72deg); }
+}
+
+.globe-pulse-dot {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  background: #f0443e;
+  border-radius: 50%;
+  box-shadow: 0 0 16px #f0443e, 0 0 30px #f0443e;
+  transform: translate(-50%, -50%);
+  animation: pulseDot 2.2s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.9; }
+  50% { transform: translate(-50%, -50%) scale(1.6); opacity: 1; box-shadow: 0 0 25px #2764d8, 0 0 40px #2764d8; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-globe,
+  .globe-continents,
+  .globe-orbit-ring,
+  .globe-pulse-dot {
+    animation: none !important;
+  }
+}

@@ -5,7 +5,9 @@ import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import GamePage from './pages/GamePage'
+import DemoGamePage from './pages/DemoGamePage'
 import PlaceholderPage from './pages/PlaceholderPage'
+import { AboutPage, WorldPage, FeaturesPage, RoadmapPage, JournalPage, FAQPage, TermsPage, PrivacyPage, ContactPage } from './pages/PublicPages'
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
@@ -53,6 +55,15 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/world" element={<WorldPage />} />
+      <Route path="/features" element={<FeaturesPage />} />
+      <Route path="/roadmap" element={<RoadmapPage />} />
+      <Route path="/journal" element={<JournalPage />} />
+      <Route path="/faq" element={<FAQPage />} />
+      <Route path="/terms" element={<TermsPage />} />
+      <Route path="/privacy" element={<PrivacyPage />} />
+      <Route path="/contact" element={<ContactPage />} />
 
       <Route
         path="/login"
@@ -221,11 +232,7 @@ export default function App() {
         path="/demo"
         element={
           <Layout>
-            <PlaceholderPage
-              title="Demo Mode"
-              description="Try Nigeria Life without an account. Limited features, progress not saved."
-              icon="🎮"
-            />
+            <DemoGamePage />
           </Layout>
         }
       />

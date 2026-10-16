@@ -73,12 +73,19 @@ export default function SignupPage() {
     setSubmitError('')
     setSubmitted(true)
 
-    const { error } = await signUp(formData.email, formData.password, formData.username, formData.displayName)
-    if (error) {
-      setSubmitError(error.message)
+    try {
+      const { error } = await signUp(formData.email, formData.password, formData.username, formData.displayName)
+      if (error) {
+        setSubmitError(error.message)
+        setSubmitted(false)
+      } else {
+        navigate('/game', { replace: true })
+      }
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error ? err.message : 'Something went wrong creating your account. Please try again.'
+      )
       setSubmitted(false)
-    } else {
-      navigate('/game', { replace: true })
     }
   }
 

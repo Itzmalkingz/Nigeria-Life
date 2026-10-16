@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
 import { supabase, getCurrentUser, onAuthStateChange } from './supabase'
+import { withTimeout, AUTH_REQUEST_TIMEOUT_MS } from '../utils/async'
+import { needsEmailConfirmation, SIGNUP_CONFIRMATION_MESSAGE } from '../utils/auth'
 import type { User, Session, AuthState } from '../types'
 
 interface AuthContextType extends AuthState {
@@ -27,6 +29,8 @@ interface SupabaseSession {
   expires_at?: number
 }
 
+const LOCAL_USER_KEY = 'life-in-africa-local-user'
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AuthState>({
     user: null,
@@ -35,13 +39,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     error: null,
   })
 
+  const isPlaceholderSupabase = !import.meta.env.VITE_SUPABASE_URL || import.meta.env.VITE_SUPABASE_URL.includes('placeholder')
+
   useEffect(() => {
     let mounted = true
 
     const initializeAuth = async () => {
+      if (isPlaceholderSupabase) {
+        // Fallback local mock auth for seamless evaluation
+        const saved = localStorage.getItem(LOCAL_USER_KEY)
+        if (saved) {
+          try {
+            const parsedUser = JSON.parse(saved)
+            if (mounted) {
+              setState({
+                user: parsedUser,
+                session: {
+                  user: parsedUser,
+                  accessToken: 'local-token',
+                  refreshToken: 'local-refresh',
+                  expiresAt: Date.now() + 86400000,
+                },
+                loading: false,
+                error: null,
+              })
+              return
+            }
+          } catch {
+            // ignore
+          }
+        }
+        if (mounted) {
+          setState({ user: null, session: null, loading: false, error: null })
+        }
+        return
+      }
+
       try {
-        const user = await getCurrentUser()
-        const { data: { session } } = await supabase.auth.getSession()
+        const user = await withTimeout(getCurrentUser(), AUTH_REQUEST_TIMEOUT_MS, 'Session check')
+        const { data: { session } } = await withTimeout(
+          supabase.auth.getSession(),
+          AUTH_REQUEST_TIMEOUT_MS,
+          'Session check'
+        )
 
         if (mounted) {
           if (user && session) {
@@ -74,6 +114,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     initializeAuth()
 
+    if (isPlaceholderSupabase) return
+
     const { data: { subscription } } = onAuthStateChange(async (event, session: unknown) => {
       if (!mounted) return
 
@@ -105,36 +147,140 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       mounted = false
       subscription.unsubscribe()
     }
-  }, [])
+  }, [isPlaceholderSupabase])
 
   const signUp = async (email: string, password: string, username: string, displayName: string) => {
     setState(prev => ({ ...prev, loading: true, error: null }))
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: { username, display_name: displayName },
-      },
-    })
-    if (error) {
-      setState(prev => ({ ...prev, loading: false, error: error.message }))
-      return { error }
+
+    if (isPlaceholderSupabase) {
+      const newUser: User = {
+        id: `local-${Date.now()}`,
+        email,
+        username: username || email.split('@')[0],
+        displayName: displayName || 'Player',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }
+      const newSession: Session = {
+        user: newUser,
+        accessToken: 'local-token',
+        refreshToken: 'local-refresh',
+        expiresAt: Date.now() + 86400000,
+      }
+      localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(newUser))
+      setState({
+        user: newUser,
+        session: newSession,
+        loading: false,
+        error: null,
+      })
+      return { error: null }
     }
-    return { error: null }
+
+    try {
+      const { data, error } = await withTimeout(
+        supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: { username, display_name: displayName },
+          },
+        }),
+        AUTH_REQUEST_TIMEOUT_MS,
+        'Sign up'
+      )
+      if (error) {
+        setState(prev => ({ ...prev, loading: false, error: error.message }))
+        return { error }
+      }
+      if (needsEmailConfirmation(data)) {
+        // Account created but no session (e.g. email confirmation required).
+        // Do NOT treat as authenticated: reset loading and explain the next step.
+        setState(prev => ({ ...prev, loading: false, error: null }))
+        return { error: new Error(SIGNUP_CONFIRMATION_MESSAGE) }
+      }
+      // Session present: populate auth state directly instead of relying
+      // solely on the SIGNED_IN event timing. The listener still runs and
+      // will converge on the same values.
+      setState({
+        user: mapUser(data.user as unknown as SupabaseUser),
+        session: mapSession(data.session as unknown as SupabaseSession),
+        loading: false,
+        error: null,
+      })
+      return { error: null }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Sign up failed. Please check your connection and try again.'
+      setState(prev => ({ ...prev, loading: false, error: message }))
+      return { error: err instanceof Error ? err : new Error(message) }
+    }
   }
 
   const signIn = async (email: string, password: string) => {
     setState(prev => ({ ...prev, loading: true, error: null }))
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) {
-      setState(prev => ({ ...prev, loading: false, error: error.message }))
-      return { error }
+
+    if (isPlaceholderSupabase) {
+      const existing = localStorage.getItem(LOCAL_USER_KEY)
+      let user: User
+      if (existing) {
+        user = JSON.parse(existing)
+        user.email = email
+      } else {
+        user = {
+          id: `local-${Date.now()}`,
+          email,
+          username: email.split('@')[0],
+          displayName: email.split('@')[0],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }
+        localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(user))
+      }
+      const session: Session = {
+        user,
+        accessToken: 'local-token',
+        refreshToken: 'local-refresh',
+        expiresAt: Date.now() + 86400000,
+      }
+      setState({
+        user,
+        session,
+        loading: false,
+        error: null,
+      })
+      return { error: null }
     }
-    return { error: null }
+
+    try {
+      const { error } = await withTimeout(
+        supabase.auth.signInWithPassword({ email, password }),
+        AUTH_REQUEST_TIMEOUT_MS,
+        'Sign in'
+      )
+      if (error) {
+        setState(prev => ({ ...prev, loading: false, error: error.message }))
+        return { error }
+      }
+      return { error: null }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Sign in failed. Please check your connection and try again.'
+      setState(prev => ({ ...prev, loading: false, error: message }))
+      return { error: err instanceof Error ? err : new Error(message) }
+    }
   }
 
   const signOut = async () => {
     setState(prev => ({ ...prev, loading: true }))
+    if (isPlaceholderSupabase) {
+      localStorage.removeItem(LOCAL_USER_KEY)
+      setState({
+        user: null,
+        session: null,
+        loading: false,
+        error: null,
+      })
+      return
+    }
     await supabase.auth.signOut()
     setState({
       user: null,
@@ -145,6 +291,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const resetPassword = async (email: string) => {
+    if (isPlaceholderSupabase) {
+      return { error: null }
+    }
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
     })
@@ -152,6 +301,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   const refreshSession = async () => {
+    if (isPlaceholderSupabase) return
     const { data: { session } } = await supabase.auth.refreshSession()
     if (session) {
       setState(prev => ({ ...prev, session: mapSession(session as unknown as SupabaseSession) }))
@@ -165,6 +315,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   const context = useContext(AuthContext)
   if (!context) {

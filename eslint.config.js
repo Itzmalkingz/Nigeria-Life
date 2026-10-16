@@ -29,9 +29,9 @@ export default tseslint.config(
         ecmaFeatures: { jsx: true },
         sourceType: 'module',
       },
-      settings: {
-        react: { version: '18.3' },
-      },
+    },
+    settings: {
+      react: { version: '18.3' },
     },
     rules: {
       ...reactHooks.configs.recommended.rules,

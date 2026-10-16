@@ -9,12 +9,12 @@ export default function Footer() {
       <div className="container-game py-8">
         <div className="grid gap-8 md:grid-cols-4">
           <div className="space-y-4">
-            <Link to="/game" className="flex items-center gap-2 text-warm-ivory hover:text-life-red transition-colors" aria-label="Nigeria Life Home">
+            <Link to="/game" className="flex items-center gap-2 text-warm-ivory hover:text-life-red transition-colors" aria-label="Life in Africa Home">
               <Logo className="w-8 h-8" />
-              <span className="font-display font-bold text-display-sm">Nigeria Life</span>
+              <span className="font-display font-bold text-display-sm">Life in Africa</span>
             </Link>
             <p className="text-body-sm text-muted-text max-w-xs">
-              One beginning. Many choices. One life. Build your story in a living Nigerian world.
+              One beginning. Many choices. One life. Build your story in a living African world.
             </p>
             <div className="flex items-center gap-4">
               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-muted-text hover:text-life-red transition-colors" aria-label="Twitter">
@@ -32,20 +32,21 @@ export default function Footer() {
           <nav className="space-y-3" aria-label="Product links">
             <h4 className="font-display font-semibold text-warm-ivory">Product</h4>
             <ul className="space-y-2">
-              <li><Link to="/game" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">Play Now</Link></li>
-              <li><Link to="/map" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">Map</Link></li>
+              <li><Link to="/about" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">About</Link></li>
+              <li><Link to="/world" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">World</Link></li>
               <li><Link to="/features" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">Features</Link></li>
               <li><Link to="/roadmap" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">Roadmap</Link></li>
+              <li><Link to="/journal" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">Journal</Link></li>
             </ul>
           </nav>
 
           <nav className="space-y-3" aria-label="Community links">
             <h4 className="font-display font-semibold text-warm-ivory">Community</h4>
             <ul className="space-y-2">
-              <li><Link to="/wiki" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">Wiki</Link></li>
-              <li><Link to="/discord" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">Discord</Link></li>
-              <li><Link to="/twitter" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">Twitter</Link></li>
-              <li><Link to="/feedback" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">Feedback</Link></li>
+              <li><Link to="/faq" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">FAQ & Help</Link></li>
+              <li><Link to="/contact" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">Contact Us</Link></li>
+              <li><a href="https://discord.com" target="_blank" rel="noopener noreferrer" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">Discord</a></li>
+              <li><a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">Twitter</a></li>
             </ul>
           </nav>
 
@@ -54,15 +55,14 @@ export default function Footer() {
             <ul className="space-y-2">
               <li><Link to="/terms" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">Terms of Use</Link></li>
               <li><Link to="/privacy" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/disclaimer" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">Disclaimer</Link></li>
-              <li><Link to="/cookies" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">Cookie Policy</Link></li>
+              <li><Link to="/contact" className="text-body-sm text-muted-text hover:text-warm-ivory transition-colors">Support</Link></li>
             </ul>
           </nav>
         </div>
 
         <div className="mt-8 pt-8 border-t border-navy/20 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-body-sm text-muted-text">
-            © {currentYear} Nigeria Life. All rights reserved.
+            © {currentYear} Life in Africa. All rights reserved.
           </p>
           <p className="text-caption text-muted-text">
             18+ only. Fictional simulation. Not financial advice.

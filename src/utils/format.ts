@@ -3,7 +3,7 @@ export function formatKobo(kobo: number): string {
   return new Intl.NumberFormat('en-NG', {
     style: 'currency',
     currency: 'NGN',
-    minimumFractionDigits: 0,
+    minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(naira)
 }
@@ -11,10 +11,12 @@ export function formatKobo(kobo: number): string {
 export function formatKoboCompact(kobo: number): string {
   const naira = kobo / 100
   if (naira >= 1_000_000) {
-    return `₦${(naira / 1_000_000).toFixed(1)}M`
+    const millions = naira / 1_000_000
+    return `₦${millions === Math.floor(millions) ? millions.toFixed(0) : millions.toFixed(1)}M`
   }
   if (naira >= 1_000) {
-    return `₦${(naira / 1_000).toFixed(1)}K`
+    const thousands = naira / 1_000
+    return `₦${thousands === Math.floor(thousands) ? thousands.toFixed(0) : thousands.toFixed(1)}K`
   }
   return `₦${naira.toLocaleString()}`
 }

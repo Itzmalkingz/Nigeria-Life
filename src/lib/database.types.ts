@@ -18,8 +18,9 @@ export interface Database {
           last_tick_at: string
           is_incarcerated: boolean
           prison_release_at: string | null
+          updated_at: string
         }
-        Insert: Omit<Database['public']['Tables']['profiles']['Row'], 'created_at'>
+        Insert: Omit<Database['public']['Tables']['profiles']['Row'], 'created_at' | 'updated_at'>
         Update: Partial<Database['public']['Tables']['profiles']['Row']>
       }
       player_needs: {
@@ -53,8 +54,25 @@ export interface Database {
         Update: never
       }
     }
-    Views: {}
-    Functions: {}
-    Enums: {}
+    Views: Record<string, never>
+    Functions: {
+      execute_transaction: {
+        Args: {
+          p_player_id: string
+          p_type: string
+          p_amount_kobo: number
+          p_account_type: string
+          p_description: string
+          p_reference_id: string | null
+          p_idempotency_key: string
+        }
+        Returns: {
+          success: boolean
+          new_balance_kobo: number
+          error_message: string | null
+        }[]
+      }
+    }
+    Enums: Record<string, never>
   }
 }

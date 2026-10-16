@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Footer from '../components/Footer'
 import Logo from '../components/Logo'
 import './landing.css'
-
-type VarStyle = CSSProperties & { [key: `--${string}`]: string }
+import './landing-globe.css'
 
 // Reveal-on-scroll hook with reduced-motion respect
 function useReveal<T extends HTMLElement = HTMLElement>() {
@@ -47,16 +46,16 @@ const scrollToId = (id: string) => {
 function NavSection() {
   return (
     <nav className="landing-nav" aria-label="Primary">
-      <Link to="/" className="landing-nav-logo" aria-label="Nigeria Life Home">
+      <Link to="/" className="landing-nav-logo" aria-label="Life in Africa Home">
         <Logo className="w-8 h-8" />
-        <span className="nav-logo-text">Nigeria Life</span>
+        <span className="nav-logo-text">Life in Africa</span>
       </Link>
       <div className="landing-nav-links">
-        <button className="landing-nav-btn" onClick={() => scrollToId('world')}>The World</button>
-        <button className="landing-nav-btn" onClick={() => scrollToId('paths')}>Your Path</button>
-        <button className="landing-nav-btn" onClick={() => scrollToId('systems')}>How It Works</button>
-        <button className="landing-nav-btn" onClick={() => scrollToId('day')}>A Day</button>
-        <button className="landing-nav-btn" onClick={() => scrollToId('vision')}>Long Game</button>
+        <button className="landing-nav-btn" onClick={() => scrollToId('world')}>Continental World</button>
+        <button className="landing-nav-btn" onClick={() => scrollToId('paths')}>Life Paths</button>
+        <button className="landing-nav-btn" onClick={() => scrollToId('systems')}>Interlocking Systems</button>
+        <button className="landing-nav-btn" onClick={() => scrollToId('day')}>Daily Life</button>
+        <button className="landing-nav-btn" onClick={() => scrollToId('vision')}>Legacy & Future</button>
       </div>
       <div className="landing-nav-actions">
         <Link to="/login" className="nav-btn-ghost">Sign In</Link>
@@ -70,6 +69,22 @@ function HeroSection() {
   return (
     <section id="hero" className="landing-hero">
       <div className="landing-hero-overlay">
+        <div className="hero-globe-container" aria-hidden="true">
+          <div className="hero-globe">
+            <div className="globe-sphere" />
+            <div className="globe-continents">
+              <div className="africa-continent-shape" />
+              <div className="globe-grid-lat" />
+              <div className="globe-grid-lon" />
+            </div>
+            <div className="globe-atmosphere" />
+            <div className="globe-orbit-ring" />
+            <div className="globe-pulse-dot" style={{ top: '42%', left: '48%' }} title="Lagos" />
+            <div className="globe-pulse-dot" style={{ top: '50%', left: '58%' }} title="Nairobi" />
+            <div className="globe-pulse-dot" style={{ top: '75%', left: '54%' }} title="Johannesburg" />
+            <div className="globe-pulse-dot" style={{ top: '30%', left: '55%' }} title="Cairo" />
+          </div>
+        </div>
         <div className="hero-heat-glow" />
         <div className="hero-dust" />
       </div>
@@ -82,7 +97,7 @@ function HeroSection() {
       <div className="landing-hero-content">
         <div className="hero-badge reveal-fade">
           <span className="hero-badge-dot" aria-hidden="true" />
-          <span>Built for Nigeria. By Nigerians.</span>
+          <span>An Original Continental Life Simulation • 18+</span>
         </div>
         <h1 className="hero-title reveal-fade">
           One beginning.{' '}
@@ -90,32 +105,31 @@ function HeroSection() {
           <span className="hero-title-blue">One life.</span>
         </h1>
         <p className="hero-subtitle reveal-fade">
-          Build your story in a living Nigerian world. Work, hustle, invest, love, scheme — every choice echoes.
-          No two lives unfold the same way.
+          Build your story in a living, systemic African world. Navigate work, commerce, relationships, informal economies, and unexpected turning points where every decision echoes.
         </p>
         <div className="hero-cta reveal-fade">
           <Link to="/signup" className="hero-btn-primary">
-            Start Your Life Free
+            Create Your Character
             <span className="hero-btn-arrow" aria-hidden="true">→</span>
           </Link>
           <Link to="/demo" className="hero-btn-secondary">
-            Try Demo
+            Explore Prototype
           </Link>
         </div>
         <div className="hero-meta reveal-fade">
           <span className="hero-metric">
-            <span className="hero-metric-num">18+</span>
-            <span className="hero-metric-label">Rated • Not for kids</span>
+            <span className="hero-metric-num">Adults 18+</span>
+            <span className="hero-metric-label">Consequences & Depth</span>
           </span>
           <span className="hero-metric">
-            <span className="hero-metric-num">No download</span>
-            <span className="hero-metric-label">Play in your browser</span>
+            <span className="hero-metric-num">Browser First</span>
+            <span className="hero-metric-label">No download required</span>
           </span>
         </div>
       </div>
       <div className="hero-divider" />
       <div className="hero-scroll">
-        <span className="hero-scroll-text">Scroll to begin</span>
+        <span className="hero-scroll-text">Scroll to explore</span>
         <div className="hero-wheel" />
       </div>
     </section>
@@ -125,20 +139,20 @@ function HeroSection() {
 function WorldSection() {
   const { ref, visible } = useReveal()
   const cards = [
-    {
-      tag: 'A city that breathes',
-      title: 'Lagos',
-      desc: 'From the quiet of Lekki to the energy of Ikeja. Danfos rumble past, rooftop goats nap in the rain, and someone is always frying akara at dawn.',
+  {
+      tag: 'Living Environments',
+      title: 'Vibrant African Cities',
+      desc: 'Starting in Lagos and expanding across continental hubs. From bustling commercial markets to tech districts and quiet neighborhoods, every destination pulses with local atmosphere.',
     },
     {
-      tag: 'Characters with memories',
-      title: 'NPCs that remember',
-      desc: 'Mama Nkechi who sold you your first office shirt will remember if you paid on time. Your neighbour recalls the fight from two months ago.',
+      tag: 'NPCs with Memory',
+      title: 'Characters Who Remember',
+      desc: 'Relationships have weight. Shopkeepers, landlords, colleagues, and family members track your reputation, debts, and past kindnesses across time.',
     },
     {
-      tag: 'Your words linger',
-      title: 'Consequences are real',
-      desc: 'Rent is due Saturday. Loans compound at informal rates. Crime leaves evidence. The world keeps a ledger and eventually it calls in.',
+      tag: 'Real Consequences',
+      title: 'A World That Keeps a Ledger',
+      desc: 'Rent is due weekly. Informal loans compound. Shortcuts carry legal and social risks. The simulation remembers your choices long after you make them.',
     },
   ]
 
@@ -146,11 +160,10 @@ function WorldSection() {
     <section id="world" ref={ref} className="landing-section landing-section--world">
       <div className="landing-section-inner">
         <div className="reveal-fade">
-          <span className="section-tag">The World</span>
-          <h2 className="section-title">A Nigerian city that lives while you don't.</h2>
+          <span className="section-tag">Continental World</span>
+          <h2 className="section-title">An authentic African simulation that lives and breathes.</h2>
           <p className="section-subtitle">
-            Nigeria Life isn't a checklist of landmarks. It is the daily texture — the heat, the noise, the
-            pressure, the small kindnesses — and how it shapes what you can become.
+            Life in Africa isn't a static map or a series of disconnected minigames. It is an interconnected socio-economic ecosystem where culture, commerce, transport, and community dynamics shape your trajectory.
           </p>
         </div>
         <div className="cards-3">
@@ -158,7 +171,7 @@ function WorldSection() {
             <article
               key={i}
               className={`card-reveal card-3 ${visible ? 'is-visible' : ''}`}
-              style={{ '--card-delay': `${i * 120}ms` } as any}
+              style={{ '--card-delay': `${i * 120}ms` } as React.CSSProperties}
             >
               <span className="card-tag">{c.tag}</span>
               <h3>{c.title}</h3>
@@ -177,31 +190,31 @@ function PathsSection() {
   const paths = [
     {
       title: 'The Corporate Ladder',
-      desc: 'Climb into a Murtala Mohammed Airport terminal company. Office politics, promotion fights, boardrooms and broken promises.',
+      desc: 'Climb through office politics, rigorous shift schedules, performance reviews, boardrooms, and professional promotions.',
       accent: 'choice-blue',
-      stat: 'Office politics',
-      statDesc: 'Navigated skill grows',
+      stat: 'Professional track',
+      statDesc: 'Skill-gated career growth',
     },
     {
-      title: 'The Hustler',
-      desc: 'Data is expensive but ideas are free. Start a side hustle from your room — reselling, design, transport coordination.',
+      title: 'The Hustler & Entrepreneur',
+      desc: 'Start small from your room. Side gigs, freelance gigs, trading in bustling markets, or registering your own business.',
       accent: 'earth',
-      stat: 'Side hustles',
-      statDesc: 'Unlocks opportunities',
+      stat: 'Independent hustle',
+      statDesc: 'Flexible schedules & scale',
     },
     {
-      title: 'The Investor',
-      desc: 'Buy land before the road gets there. Land banking, rental income, and knowing which district the next metro line will touch.',
+      title: 'The Property Investor',
+      desc: 'Build passive income through real estate, land banking in developing corridors, and managing rental properties.',
       accent: 'earth',
-      stat: 'Assets',
-      statDesc: 'Passive income compounds',
+      stat: 'Asset accumulation',
+      statDesc: 'Long-term wealth building',
     },
     {
-      title: 'The Risky Path',
-      desc: 'FOMO is real. Scams, quick deals, and dangerous shortcuts offer fast money — at a price you will pay back with interest.',
+      title: 'The Risky Shortcut',
+      desc: 'Pursue high-risk opportunities for fast cash. Beware of investigations, evidence trails, and severe legal consequences.',
       accent: 'life-red',
-      stat: 'Reputation',
-      statDesc: 'Watch your name',
+      stat: 'Reputation & risk',
+      statDesc: 'Consequences catch up',
     },
   ]
 
@@ -210,10 +223,9 @@ function PathsSection() {
       <div className="landing-section-inner">
         <div className="reveal-fade">
           <span className="section-tag">Choose Your Path</span>
-          <h2 className="section-title">There is no meta game. Only your life.</h2>
+          <h2 className="section-title">There is no single script. Only your life.</h2>
           <p className="section-subtitle">
-            Do you want status, or freedom? Stability, or a story you tell at your child's wedding? The game does not
-            grade you — it only records what you chose.
+            Pursue stability, status, creative freedom, or dangerous shortcuts. The game does not grade your choices — it simply records what you built and how you lived.
           </p>
         </div>
         <div className="paths-grid">
@@ -221,7 +233,7 @@ function PathsSection() {
             <article
               key={i}
               className={`path-card ${p.accent} ${visible ? 'is-visible' : ''}`}
-              style={{ '--card-delay': `${i * 100}ms` } as VarStyle}
+              style={{ '--card-delay': `${i * 100}ms` } as React.CSSProperties}
             >
               <div className="path-header">
                 <span className="path-dot" aria-hidden="true" />
@@ -247,11 +259,10 @@ function SystemsSection() {
     <section id="systems" ref={ref} className="landing-section landing-section--systems">
       <div className="landing-section-inner">
         <div className="reveal-fade">
-          <span className="section-tag">How It Works</span>
-          <h2 className="section-title">Life is a connected system.</h2>
+          <span className="section-tag">Interlocking Systems</span>
+          <h2 className="section-title">Every subsystem connects to your daily survival.</h2>
           <p className="section-subtitle">
-            Nothing happens in isolation. Spend money you do not have and rent compounds. Lie to a contact and the next
-            opportunity arrives cold. The city is one web, and you are a node in it.
+            Needs drive energy; energy governs work performance; money covers rent and food; relationships unlock opportunities. Nothing happens in isolation.
           </p>
         </div>
 
@@ -263,7 +274,7 @@ function SystemsSection() {
 
           <div className="systems-rings">
             <div className="systems-ring systems-ring-1">
-              {['Money', 'Rent', 'Energy'].map((label, i) => (
+              {['Cash & Bank', 'Rent & Bills', 'Energy'].map((label, i) => (
                 <div key={label} className={`system-node system-node-${i}`} title={label}>
                   <span>{label}</span>
                 </div>
@@ -277,7 +288,7 @@ function SystemsSection() {
               ))}
             </div>
             <div className="systems-ring systems-ring-3">
-              {['Hustles', 'Investments', 'Health'].map((label, i) => (
+              {['Side Hustles', 'Housing', 'Health'].map((label, i) => (
                 <div key={label} className={`system-node system-node-${i}`} title={label}>
                   <span>{label}</span>
                 </div>
@@ -288,32 +299,32 @@ function SystemsSection() {
           <div className="systems-weave">
             {visible && (
               <>
-                <span className="system-line" style={{ '--line-delay': '0ms' } as VarStyle} />
-                <span className="system-line" style={{ '--line-delay': '80ms' } as VarStyle} />
-                <span className="system-line" style={{ '--line-delay': '160ms' } as VarStyle} />
-                <span className="system-line" style={{ '--line-delay': '240ms' } as VarStyle} />
-                <span className="system-line" style={{ '--line-delay': '320ms' } as VarStyle} />
-                <span className="system-line" style={{ '--line-delay': '400ms' } as VarStyle} />
+                <span className="system-line" style={{ '--line-delay': '0ms' } as React.CSSProperties} />
+                <span className="system-line" style={{ '--line-delay': '80ms' } as React.CSSProperties} />
+                <span className="system-line" style={{ '--line-delay': '160ms' } as React.CSSProperties} />
+                <span className="system-line" style={{ '--line-delay': '240ms' } as React.CSSProperties} />
+                <span className="system-line" style={{ '--line-delay': '320ms' } as React.CSSProperties} />
+                <span className="system-line" style={{ '--line-delay': '400ms' } as React.CSSProperties} />
               </>
             )}
           </div>
         </div>
 
         <div className="systems-cards">
-          <div className={`systems-card ${visible ? 'is-visible' : ''}`} style={{ '--card-delay': '0ms' }}>
+          <div className={`systems-card ${visible ? 'is-visible' : ''}`} style={{ '--card-delay': '0ms' } as React.CSSProperties}>
             <div className="systems-card-num">01</div>
-            <h4>Choices, not points</h4>
-            <p>Every decision changes what is available to you next.</p>
+            <h4>Player Agency</h4>
+            <p>Meaningful decisions with multiple viable routes to success or failure.</p>
           </div>
-          <div className={`systems-card ${visible ? 'is-visible' : ''}`} style={{ '--card-delay': '140ms' }}>
+          <div className={`systems-card ${visible ? 'is-visible' : ''}`} style={{ '--card-delay': '140ms' } as React.CSSProperties}>
             <div className="systems-card-num">02</div>
-            <h4>Time is money</h4>
-            <p>One real minute passes as one game hour. Opportunities arrive and leave on schedule.</p>
+            <h4>Persistent Simulation</h4>
+            <p>Time advances logically, respecting schedules, shift hours, and weekly rent cycles.</p>
           </div>
-          <div className={`systems-card ${visible ? 'is-visible' : ''}`} style={{ '--card-delay': '280ms' }}>
+          <div className={`systems-card ${visible ? 'is-visible' : ''}`} style={{ '--card-delay': '280ms' } as React.CSSProperties}>
             <div className="systems-card-num">03</div>
-            <h4>The world remembers</h4>
-            <p>NPCs track your name, your debts, and your reputation across contexts.</p>
+            <h4>Server-Authoritative</h4>
+            <p>Financial transactions, balance changes, and core rules are validated securely server-side.</p>
           </div>
         </div>
       </div>
@@ -326,23 +337,23 @@ function DaySection() {
   const moments = [
     {
       time: '06:00',
-      title: 'Dawn',
-      desc: 'The alarm beats your head. There is no choice about being late — being late is being unemployed. First bus fare: negotiate or walk.',
+      title: 'Morning Routine',
+      desc: 'Wake up, check energy and hunger needs. Plan transport and transit costs before the morning rush begins.',
     },
     {
       time: '10:30',
-      title: 'Mid-morning',
-      desc: 'A contact asks a favour. Say yes and you lose hours; say no and you owe a favour later. Either way you pay.',
+      title: 'Work & Hustle',
+      desc: 'Attend your shift or take on freelance gigs. Balance professional duties with unexpected social requests.',
     },
     {
       time: '14:00',
-      title: 'Afternoon',
-      desc: 'Rent reminder pops up. Pay now, or remember why you lent that money to a friend in the first place.',
+      title: 'Afternoon Pressures',
+      desc: 'Manage bills, respond to phone messages from family or contacts, and evaluate investment opportunities.',
     },
     {
       time: '19:30',
-      title: 'Evening',
-      desc: 'The sun goes down hard. This is when you fix what broke, or plan what will break tomorrow.',
+      title: 'Evening & Recovery',
+      desc: 'Return home to rest, socialize at local venues, or plan tomorrow’s strategy.',
     },
   ]
 
@@ -350,10 +361,10 @@ function DaySection() {
     <section id="day" ref={ref} className="landing-section landing-section--day">
       <div className="landing-section-inner">
         <div className="reveal-fade">
-          <span className="section-tag">A Day In Your World</span>
-          <h2 className="section-title">You will learn Lagos by the clock.</h2>
+          <span className="section-tag">A Day In Your Life</span>
+          <h2 className="section-title">Navigate time with purpose.</h2>
           <p className="section-subtitle">
-            No cutscenes. The day plays out as you live it — and the game never tells you what to do next.
+            Every action consumes time and energy. Plan your schedule wisely to avoid burnout and financial shortfalls.
           </p>
         </div>
 
@@ -363,7 +374,7 @@ function DaySection() {
             <div
               key={m.time}
               className={`day-item ${visible ? 'is-visible' : ''}`}
-              style={{ '--day-delay': `${i * 130}ms` } as VarStyle}
+              style={{ '--day-delay': `${i * 130}ms` } as React.CSSProperties}
             >
               <div className="day-time">{m.time}</div>
               <div className="day-marker" aria-hidden="true" />
@@ -383,16 +394,16 @@ function VisionSection() {
   const { ref, visible } = useReveal()
   const items = [
     {
-      title: 'Short-term goals',
-      desc: 'This week, pay rent and buy your first suit.',
+      title: 'Short-Term Goals',
+      desc: 'Pay this week’s rent, upgrade your phone, and maintain your daily needs.',
     },
     {
-      title: 'Life goals',
-      desc: 'Get married. Buy a house. Start the business you have been talking about for years.',
+      title: 'Life Ambitions',
+      desc: 'Advance your career, build lasting relationships, acquire property, and establish a thriving business.',
     },
     {
-      title: 'Legacy',
-      desc: 'Long after you die, your family carries what you built — and what you burned.',
+      title: 'Generational Legacy',
+      desc: 'Build assets and reputation that outlast your character, opening doors for future family progression.',
     },
   ]
 
@@ -400,11 +411,10 @@ function VisionSection() {
     <section id="vision" ref={ref} className="landing-section landing-section--vision">
       <div className="landing-section-inner">
         <div className="reveal-fade">
-          <span className="section-tag">Long Game</span>
+          <span className="section-tag">Legacy & Future</span>
           <h2 className="section-title">Think beyond today.</h2>
           <p className="section-subtitle">
-            The game rewards patience the way Lagos does — by punishing short-sightedness. Build a life you can hand
-            down, or spend it all in a single season of good luck.
+            Short-term expediency creates long-term consequences. Build a sustainable foundation or risk losing everything you worked for.
           </p>
         </div>
         <div className="vision-cards">
@@ -412,7 +422,7 @@ function VisionSection() {
             <div
               key={v.title}
               className={`vision-card ${visible ? 'is-visible' : ''}`}
-              style={{ '--card-delay': `${i * 140}ms` } as VarStyle}
+              style={{ '--card-delay': `${i * 140}ms` } as React.CSSProperties}
             >
               <span className="vision-ring" aria-hidden="true" />
               <h3>{v.title}</h3>
@@ -470,21 +480,20 @@ function BrandSection() {
             <span className="brand-title-blue">One life.</span>
           </h2>
           <p className="brand-subtitle">
-            A living Nigerian simulation where your choices create a story no two players share. Built in Lagos, for
-            everyone who knows what it means to start from nothing and build your own way.
+            An original, immersive life simulation designed for players who appreciate depth, systemic consequence, and authentic storytelling.
           </p>
           <div className="brand-meta">
             <div className="brand-meta-item">
               <span className="brand-meta-label">Audience</span>
-              <span className="brand-meta-value">18+</span>
+              <span className="brand-meta-value">Adults 18+</span>
             </div>
             <div className="brand-meta-item">
               <span className="brand-meta-label">Platform</span>
-              <span className="brand-meta-value">Browser</span>
+              <span className="brand-meta-value">Browser Game</span>
             </div>
             <div className="brand-meta-item">
-              <span className="brand-meta-label">Setting</span>
-              <span className="brand-meta-value">Lagos</span>
+              <span className="brand-meta-label">Model</span>
+              <span className="brand-meta-value">Free-to-Play</span>
             </div>
           </div>
         </div>
@@ -501,11 +510,11 @@ function CTASection() {
           <span className="section-tag">Your Next Chapter</span>
           <h2 className="section-title">Your story starts with a single decision.</h2>
           <p className="section-subtitle">
-            Create your life today. Play for free — real progress, real consequences, no pay-to-win.
+            Create your life today. Free to play, secure persistence, and zero pay-to-win mechanics.
           </p>
           <div className="cta-actions">
             <Link to="/signup" className="cta-btn-primary">
-              Create Your Life
+              Create Your Character
               <span className="cta-btn-arrow" aria-hidden="true">→</span>
             </Link>
             <Link to="/demo" className="cta-btn-secondary">

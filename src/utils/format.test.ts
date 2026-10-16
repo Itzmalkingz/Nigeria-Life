@@ -24,9 +24,9 @@ describe('format utilities', () => {
   describe('formatKoboCompact', () => {
     it('formats large amounts compactly', () => {
       expect(formatKoboCompact(50000)).toBe('₦500')
-      expect(formatKoboCompact(1500000)).toBe('₦1.5K')
+      expect(formatKoboCompact(150000)).toBe('₦1.5K')
       expect(formatKoboCompact(25000000)).toBe('₦250K')
-      expect(formatKoboCompact(1500000000)).toBe('₦1.5M')
+      expect(formatKoboCompact(150000000)).toBe('₦1.5M')
     })
   })
 
