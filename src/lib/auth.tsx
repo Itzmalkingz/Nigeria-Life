@@ -7,6 +7,7 @@ import type { User, Session, AuthState } from '../types'
 interface AuthContextType extends AuthState {
   signUp: (email: string, password: string, username: string, displayName: string) => Promise<{ error: Error | null }>
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>
+  signInWithOAuth: (provider: 'google' | 'facebook') => Promise<{ error: Error | null }>
   signOut: () => Promise<void>
   resetPassword: (email: string) => Promise<{ error: Error | null }>
   refreshSession: () => Promise<void>
@@ -299,8 +300,61 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
   }
 
-  const resetPassword = async (email: string) => {
+  const signInWithOAuth = async (provider: 'google' | 'facebook') => {
     if (isPlaceholderSupabase) {
+      const email = `${provider}.user@example.com`
+      const existing = localStorage.getItem(LOCAL_USER_KEY)
+      let user: User
+      if (existing) {
+        user = JSON.parse(existing)
+        user.email = email
+      } else {
+        const label = provider === 'google' ? 'Google User' : 'Facebook User'
+        user = {
+          id: `local-${Date.now()}`,
+          email,
+          username: `${provider}_user`,
+          displayName: label,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }
+        localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(user))
+      }
+      const session: Session = {
+        user,
+        accessToken: 'local-token',
+        refreshToken: 'local-refresh',
+        expiresAt: Date.now() + 86400000,
+      }
+      setState({ user, session, loading: false, error: null })
+      return { error: null }
+    }
+
+    try {
+      // Full-page redirect to the provider. Supabase redirects back to the app
+      // with a session in the URL, which the AuthProvider picks up via the
+      // auth-state listener; hence no global loading toggle here (it would
+      // swap the whole page for the auth spinner mid-redirect).
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: { redirectTo: `${window.location.origin}/game` },
+      })
+      if (error) {
+        setState(prev => ({ ...prev, error: error.message }))
+        return { error }
+      }
+      return { error: null }
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : `Could not continue with ${provider}. Please check your connection and try again.`
+      setState(prev => ({ ...prev, error: message }))
+      return { error: err instanceof Error ? err : new Error(message) }
+    }
+  }
+
+  const resetPassword = async (email: string) => {    if (isPlaceholderSupabase) {
       return { error: null }
     }
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -318,7 +372,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ ...state, signUp, signIn, signOut, resetPassword, refreshSession }}>
+    <AuthContext.Provider value={{ ...state, signUp, signIn, signInWithOAuth, signOut, resetPassword, refreshSession }}>
       {children}
     </AuthContext.Provider>
   )

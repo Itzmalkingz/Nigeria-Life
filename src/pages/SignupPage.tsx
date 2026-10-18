@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../lib/auth'
 import { Button, Input } from '../components/ui'
+import OAuthButtons from '../components/OAuthButtons'
 
 export default function SignupPage() {
   const navigate = useNavigate()
@@ -185,6 +186,17 @@ export default function SignupPage() {
               Create Account
             </Button>
           </form>
+
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-navy/30" />
+            </div>
+            <div className="relative flex justify-center text-body-sm">
+              <span className="bg-navy/50 px-4 text-muted-text">Or sign up with</span>
+            </div>
+          </div>
+
+          <OAuthButtons disabled={loading || submitted} />
 
           <p className="text-center text-caption text-muted-text">
             By creating an account, you agree to our{' '}
