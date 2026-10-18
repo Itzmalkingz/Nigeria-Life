@@ -135,6 +135,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           loading: false,
           error: null,
         })
+      } else if ((event === 'PASSWORD_RECOVERY' || event === 'USER_UPDATED') && sess?.user) {
+        // A recovery link establishes a real (short-lived) session; reflect it so
+        // the reset page and any post-reset navigation see an authenticated user.
+        setState({
+          user: mapUser(sess.user),
+          session: mapSession(sess),
+          loading: false,
+          error: null,
+        })
       } else if (event === 'TOKEN_REFRESHED' && sess) {
         setState(prev => ({
           ...prev,

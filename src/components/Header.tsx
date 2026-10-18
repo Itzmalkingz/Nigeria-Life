@@ -1,13 +1,26 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../lib/auth'
 import { formatKoboCompact } from '../utils/format'
 import { useState, useEffect } from 'react'
 import Logo from './Logo'
 
 export default function Header({ isLanding = false }: { isLanding?: boolean }) {
-  const { user, loading } = useAuth()
+  const { user, loading, signOut } = useAuth()
   const location = useLocation()
+  const navigate = useNavigate()
   const [scrolled, setScrolled] = useState(false)
+  const [signingOut, setSigningOut] = useState(false)
+
+  const handleSignOut = async () => {
+    if (signingOut) return
+    setSigningOut(true)
+    try {
+      await signOut()
+      navigate('/login', { replace: true })
+    } finally {
+      setSigningOut(false)
+    }
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -70,7 +83,13 @@ export default function Header({ isLanding = false }: { isLanding?: boolean }) {
                   <span className="font-display font-medium tabular-nums">{formatKoboCompact(3400000)}</span>
                 </div>
                 <button className="btn-ghost text-body-sm" onClick={() => void 0}>Profile</button>
-                <button className="btn-outline text-body-sm" onClick={() => void 0}>Sign Out</button>
+                <button
+                  className="btn-outline text-body-sm"
+                  onClick={handleSignOut}
+                  disabled={signingOut}
+                >
+                  {signingOut ? 'Signing out…' : 'Sign Out'}
+                </button>
               </div>
             ) : (
               <div className="flex items-center gap-2">

@@ -4,6 +4,8 @@ import Layout from './components/Layout'
 import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import ResetPasswordPage from './pages/ResetPasswordPage'
 import GamePage from './pages/GamePage'
 import DemoGamePage from './pages/DemoGamePage'
 import PlaceholderPage from './pages/PlaceholderPage'
@@ -81,6 +83,9 @@ export default function App() {
           </PublicOnlyRoute>
         }
       />
+
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
 
       <Route
         path="/game"
