@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import { useAuth } from '../lib/auth'
-import { Button, Input } from '../components/ui'
+import { Button, PasswordInput } from '../components/ui'
+import AuthShell from '../components/AuthShell'
 
 type Status = 'checking' | 'ready' | 'invalid'
 
@@ -67,92 +68,115 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-dark-bg">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 text-warm-ivory hover:text-life-red transition-colors mb-6" aria-label="Nigeria Life Home">
-            <span className="text-3xl" aria-hidden="true">🌿</span>
-            <span className="font-display font-bold text-display-lg">Nigeria Life</span>
+    <AuthShell
+      title="Choose a new password"
+      tagline={done ? 'You are all set.' : 'Make it something you have not used before.'}
+    >
+      {status === 'checking' ? (
+        <div className="flex items-center justify-center py-10" role="status" aria-label="Verifying reset link">
+          <div className="h-9 w-9 animate-spin rounded-full border-2 border-choice-blue border-t-transparent" />
+        </div>
+      ) : status === 'invalid' ? (
+        <div className="space-y-4 text-center py-2" role="alert">
+          <div
+            className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-life-red/30 bg-life-red/10 text-life-red"
+            aria-hidden="true"
+          >
+            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="M12 8v5m0 3.5h.01M10.3 3.9 2.6 17.2A1.8 1.8 0 0 0 4.2 20h15.6a1.8 1.8 0 0 0 1.6-2.8L13.7 3.9a2 2 0 0 0-3.4 0Z" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <h2 className="font-display text-lg font-semibold text-warm-ivory">Reset link invalid or expired</h2>
+          <p className="text-body-sm text-text-dim">
+            This password reset link is no longer valid. Request a new one to continue.
+          </p>
+          <Link
+            to="/forgot-password"
+            className="auth-btn-primary"
+          >
+            Request a new link
           </Link>
-          <h1 className="heading-display text-display-lg mb-2">Choose a New Password</h1>
-          <p className="text-body text-muted-text">Set a new password for your account.</p>
         </div>
-
-        <div className="card space-y-6">
-          {status === 'checking' ? (
-            <div className="flex items-center justify-center py-8" role="status" aria-label="Verifying reset link">
-              <div className="w-10 h-10 border-4 border-life-red border-t-transparent rounded-full animate-spin" />
-            </div>
-          ) : status === 'invalid' ? (
-            <div className="space-y-4 text-center py-4" role="alert">
-              <div className="text-4xl" aria-hidden="true">⚠️</div>
-              <h2 className="font-display font-bold text-lg text-warm-ivory">Reset link invalid or expired</h2>
-              <p className="text-body-sm text-muted-text">
-                This password reset link is no longer valid. Please request a new one.
-              </p>
-              <Link to="/forgot-password" className="btn-primary inline-block">Request New Link</Link>
-            </div>
-          ) : done ? (
-            <div className="space-y-4 text-center py-4" role="status">
-              <div className="text-4xl" aria-hidden="true">✅</div>
-              <h2 className="font-display font-bold text-lg text-warm-ivory">Password updated</h2>
-              <p className="text-body-sm text-muted-text">
-                Your password has been changed successfully.
-              </p>
-              <Button className="w-full" onClick={() => navigate('/game', { replace: true })}>
-                Continue to Game
-              </Button>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-              <Input
-                label="New Password"
-                type="password"
-                value={password}
-                onChange={e => {
-                  setPassword(e.target.value)
-                  if (errors.password) setErrors(prev => ({ ...prev, password: '' }))
-                }}
-                placeholder="••••••••"
-                autoComplete="new-password"
-                required
-                disabled={submitting}
-                error={errors.password || undefined}
-                helperText="At least 8 characters"
-              />
-
-              <Input
-                label="Confirm New Password"
-                type="password"
-                value={confirmPassword}
-                onChange={e => {
-                  setConfirmPassword(e.target.value)
-                  if (errors.confirmPassword) setErrors(prev => ({ ...prev, confirmPassword: '' }))
-                }}
-                placeholder="••••••••"
-                autoComplete="new-password"
-                required
-                disabled={submitting}
-                error={errors.confirmPassword || undefined}
-              />
-
-              {submitError && (
-                <div className="p-3 rounded-brand bg-life-red/10 border border-life-red/20 text-life-red text-body-sm" role="alert">
-                  {submitError}
-                </div>
-              )}
-
-              <Button type="submit" className="w-full" size="lg" loading={submitting}>
-                Update Password
-              </Button>
-            </form>
-          )}
+      ) : done ? (
+        <div className="space-y-4 text-center py-2" role="status">
+          <div
+            className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-success/30 bg-success/10 text-success"
+            aria-hidden="true"
+          >
+            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="m5 12.5 4.5 4.5L19 7" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <h2 className="font-display text-lg font-semibold text-warm-ivory">Password updated</h2>
+          <p className="text-body-sm text-text-dim">
+            Your password has been changed. Continue into your life.
+          </p>
+          <Button
+            variant="secondary"
+            size="lg"
+            className="w-full rounded-control"
+            onClick={() => navigate('/game', { replace: true })}
+          >
+            Continue to the game
+          </Button>
         </div>
+      ) : (
+        <>
+          <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+            <PasswordInput
+              variant="auth"
+              label="New password"
+              value={password}
+              onChange={e => {
+                setPassword(e.target.value)
+                if (errors.password) setErrors(prev => ({ ...prev, password: '' }))
+              }}
+              placeholder="At least 8 characters"
+              autoComplete="new-password"
+              required
+              disabled={submitting}
+              error={errors.password || undefined}
+            />
 
-        <p className="mt-6 text-center text-body-sm text-muted-text">
-          <Link to="/login" className="link">Back to sign in</Link>
-        </p>
-      </div>
-    </div>
+            <PasswordInput
+              variant="auth"
+              label="Confirm new password"
+              value={confirmPassword}
+              onChange={e => {
+                setConfirmPassword(e.target.value)
+                if (errors.confirmPassword) setErrors(prev => ({ ...prev, confirmPassword: '' }))
+              }}
+              placeholder="Repeat your password"
+              autoComplete="new-password"
+              required
+              disabled={submitting}
+              error={errors.confirmPassword || undefined}
+            />
+
+            {submitError && (
+              <div className="auth-alert-error" role="alert">
+                {submitError}
+              </div>
+            )}
+
+            <Button
+              type="submit"
+              variant="secondary"
+              size="lg"
+              className="w-full rounded-control"
+              loading={submitting}
+            >
+              Update password
+            </Button>
+          </form>
+
+          <p className="mt-6 text-center text-body-sm text-text-dim">
+            <Link to="/login" className="font-medium text-choice-blue hover:text-choice-blue/80">
+              Back to log in
+            </Link>
+          </p>
+        </>
+      )}
+    </AuthShell>
   )
 }

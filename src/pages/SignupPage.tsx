@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../lib/auth'
-import { Button, Input } from '../components/ui'
+import { Button, Input, PasswordInput } from '../components/ui'
 import OAuthButtons from '../components/OAuthButtons'
+import AuthShell from '../components/AuthShell'
 
 export default function SignupPage() {
   const navigate = useNavigate()
@@ -91,126 +92,120 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-dark-bg">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 text-warm-ivory hover:text-life-red transition-colors mb-6" aria-label="Nigeria Life Home">
-            <span className="text-3xl" aria-hidden="true">🌿</span>
-            <span className="font-display font-bold text-display-lg">Nigeria Life</span>
-          </Link>
-          <h1 className="heading-display text-display-lg mb-2">Start Your Life</h1>
-          <p className="text-body text-muted-text">Free to play. 18+ only. No download required.</p>
-        </div>
+    <AuthShell
+      mode="signup"
+      title="Start your life"
+      tagline="One beginning. Many choices. One life."
+    >
+      <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+        <Input
+          variant="auth"
+          label="Display name"
+          name="displayName"
+          type="text"
+          value={formData.displayName}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          placeholder="Chinedu"
+          autoComplete="name"
+          required
+          disabled={loading || submitted}
+          error={errors.displayName}
+        />
 
-        <div className="card space-y-6">
-          <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-            <Input
-              label="Display Name"
-              name="displayName"
-              type="text"
-              value={formData.displayName}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              placeholder="Chinedu"
-              autoComplete="name"
-              required
-              disabled={loading || submitted}
-              error={errors.displayName}
-            />
+        <Input
+          variant="auth"
+          label="Username"
+          name="username"
+          type="text"
+          value={formData.username}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          placeholder="chinedu_99"
+          autoComplete="username"
+          required
+          disabled={loading || submitted}
+          error={errors.username}
+          helperText="3-20 characters: letters, numbers, underscore"
+        />
 
-            <Input
-              label="Username"
-              name="username"
-              type="text"
-              value={formData.username}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              placeholder="chinedu_99"
-              autoComplete="username"
-              required
-              disabled={loading || submitted}
-              error={errors.username}
-              helperText="3-20 characters: letters, numbers, underscore"
-            />
+        <Input
+          variant="auth"
+          label="Email"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          placeholder="chinedu@example.com"
+          autoComplete="email"
+          required
+          disabled={loading || submitted}
+          error={errors.email}
+        />
 
-            <Input
-              label="Email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              placeholder="chinedu@example.com"
-              autoComplete="email"
-              required
-              disabled={loading || submitted}
-              error={errors.email}
-            />
+        <PasswordInput
+          variant="auth"
+          label="Password"
+          name="password"
+          value={formData.password}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          placeholder="At least 8 characters"
+          autoComplete="new-password"
+          required
+          disabled={loading || submitted}
+          error={errors.password}
+        />
 
-            <Input
-              label="Password"
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              placeholder="••••••••"
-              autoComplete="new-password"
-              required
-              disabled={loading || submitted}
-              error={errors.password}
-              helperText="At least 8 characters"
-            />
+        <PasswordInput
+          variant="auth"
+          label="Confirm password"
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          placeholder="Repeat your password"
+          autoComplete="new-password"
+          required
+          disabled={loading || submitted}
+          error={errors.confirmPassword}
+        />
 
-            <Input
-              label="Confirm Password"
-              name="confirmPassword"
-              type="password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              placeholder="••••••••"
-              autoComplete="new-password"
-              required
-              disabled={loading || submitted}
-              error={errors.confirmPassword}
-            />
-
-            {submitError && (
-              <div className="p-3 rounded-brand bg-life-red/10 border border-life-red/20 text-life-red text-body-sm" role="alert">
-                {submitError}
-              </div>
-            )}
-
-            <Button type="submit" className="w-full" size="lg" loading={loading || submitted}>
-              Create Account
-            </Button>
-          </form>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-navy/30" />
-            </div>
-            <div className="relative flex justify-center text-body-sm">
-              <span className="bg-navy/50 px-4 text-muted-text">Or sign up with</span>
-            </div>
+        {submitError && (
+          <div className="auth-alert-error" role="alert">
+            {submitError}
           </div>
+        )}
 
-          <OAuthButtons disabled={loading || submitted} />
+        <Button
+          type="submit"
+          variant="secondary"
+          size="lg"
+          className="w-full rounded-control"
+          loading={loading || submitted}
+        >
+          Create account
+        </Button>
+      </form>
 
-          <p className="text-center text-caption text-muted-text">
-            By creating an account, you agree to our{' '}
-            <Link to="/terms" className="link">Terms of Use</Link>{' '}
-            and{' '}
-            <Link to="/privacy" className="link">Privacy Policy</Link>
-            . You confirm you are 18 or older.
-          </p>
-        </div>
-
-        <p className="mt-6 text-center text-body-sm text-muted-text">
-          Already have an account? <Link to="/login" className="link">Sign in</Link>
-        </p>
+      <div className="auth-divider">
+        <span>or sign up with</span>
       </div>
-    </div>
+
+      <OAuthButtons disabled={loading || submitted} />
+
+      <p className="mt-6 text-center text-caption text-text-dim">
+        By creating an account, you agree to our{' '}
+        <Link to="/terms" className="text-warm-ivory/80 underline-offset-2 hover:underline">
+          Terms of Use
+        </Link>{' '}
+        and{' '}
+        <Link to="/privacy" className="text-warm-ivory/80 underline-offset-2 hover:underline">
+          Privacy Policy
+        </Link>
+        . You confirm you are 18 or older.
+      </p>
+    </AuthShell>
   )
 }

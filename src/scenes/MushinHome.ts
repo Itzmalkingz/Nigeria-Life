@@ -5,12 +5,14 @@ import {
   Color4,
   HemisphericLight,
   DirectionalLight,
+  PointLight,
   ShadowGenerator,
   MeshBuilder,
   StandardMaterial,
   TransformNode,
   Mesh,
   AbstractMesh,
+  ArcRotateCamera,
 } from '@babylonjs/core'
 import { createPlayer, createFollowCamera } from '../game/player'
 import type { PlayerHandle, ZoneBounds } from '../game/player'
@@ -364,6 +366,98 @@ function buildStreet(scene: Scene, shadow: ShadowGenerator | null): { blockers: 
   box(scene, root, 'gateBeam', 4.0, 0.4, 0.4, 47, 2.7, 6, mat(scene, 'gateBeamMat', WOOD))
 
   return { blockers }
+}
+
+/**
+ * Non-interactive, slowly orbiting "dollhouse" view of the Mushin home used as
+ * the landing-page backdrop. It owns its camera, lights, and fog, so it must be
+ * paired with <BabylonCanvas defaultSceneContent={false}>.
+ */
+export interface MushinBackdropHandle {
+  dispose: () => void
+}
+
+export function createMushinBackdrop(scene: Scene): MushinBackdropHandle {
+  scene.clearColor = new Color4(0.043, 0.055, 0.086, 1)
+  scene.fogMode = Scene.FOGMODE_LINEAR
+  scene.fogColor = new Color3(0.055, 0.07, 0.105)
+  scene.fogStart = 44
+  scene.fogEnd = 118
+
+  const hemi = new HemisphericLight('backdropHemi', new Vector3(0, 1, 0), scene)
+  hemi.intensity = 0.6
+  hemi.diffuse = new Color3(0.85, 0.9, 1)
+  hemi.specular = new Color3(0.15, 0.16, 0.2)
+  hemi.groundColor = new Color3(0.16, 0.14, 0.12)
+
+  const sun = new DirectionalLight('backdropSun', new Vector3(-0.55, -1, -0.4), scene)
+  sun.position = new Vector3(46, 70, 28)
+  sun.intensity = 1.05
+  sun.diffuse = new Color3(1, 0.95, 0.86)
+  sun.specular = new Color3(0.25, 0.24, 0.22)
+
+  const shadows = new ShadowGenerator(2048, sun)
+  shadows.useBlurExponentialShadowMap = true
+  shadows.setDarkness(0.42)
+
+  // Warm interior light so the open dollhouse reads against the navy night.
+  const glow = new PointLight('backdropGlow', new Vector3(0, 2.6, 0.5), scene)
+  glow.intensity = 0.55
+  glow.radius = 14
+  glow.diffuse = new Color3(1, 0.78, 0.52)
+
+  buildHome(scene, shadows)
+
+  // Sage presentation stage beneath the home.
+  const stageMat = mat(scene, 'backdropStageMat', [0.36, 0.42, 0.37])
+  stageMat.specularColor = new Color3(0.02, 0.02, 0.02)
+  const stage = MeshBuilder.CreateCylinder(
+    'backdropStage',
+    { height: 0.6, diameter: 34, tessellation: 96 },
+    scene
+  )
+  stage.position = new Vector3(0, -0.35, 0)
+  stage.material = stageMat
+  stage.receiveShadows = true
+
+  const camera = new ArcRotateCamera(
+    'backdropCamera',
+    -Math.PI / 2 + 0.55,
+    1.02,
+    36,
+    new Vector3(0, 0.9, 0),
+    scene
+  )
+  camera.lowerRadiusLimit = 26
+  camera.upperRadiusLimit = 44
+  camera.minZ = 0.1
+
+  const reduceMotion =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+  const baseAlpha = camera.alpha
+  const baseBeta = camera.beta
+  let elapsed = 0
+  let observer: ReturnType<typeof scene.onBeforeRenderObservable.add> | null = null
+
+  if (!reduceMotion) {
+    observer = scene.onBeforeRenderObservable.add(() => {
+      elapsed += scene.getEngine().getDeltaTime() / 1000
+      camera.alpha = baseAlpha + Math.sin(elapsed * 0.075) * 0.3
+      camera.beta = baseBeta + Math.sin(elapsed * 0.05) * 0.035
+    })
+  }
+
+  return {
+    dispose: () => {
+      if (observer) {
+        scene.onBeforeRenderObservable.remove(observer)
+        observer = null
+      }
+      shadows.dispose()
+    },
+  }
 }
 
 export function createMushinHome(

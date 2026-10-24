@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../lib/auth'
-import { Button, Input } from '../components/ui'
+import { Button, Input, PasswordInput } from '../components/ui'
 import OAuthButtons from '../components/OAuthButtons'
+import AuthShell from '../components/AuthShell'
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -27,77 +28,69 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-dark-bg">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 text-warm-ivory hover:text-life-red transition-colors mb-6" aria-label="Nigeria Life Home">
-            <span className="text-3xl" aria-hidden="true">🌿</span>
-            <span className="font-display font-bold text-display-lg">Nigeria Life</span>
-          </Link>
-          <h1 className="heading-display text-display-lg mb-2">Welcome Back</h1>
-          <p className="text-body text-muted-text">Sign in to continue your life</p>
-        </div>
+    <AuthShell mode="login" title="Welcome back" tagline="Pick up the life you left behind.">
+      <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+        <Input
+          variant="auth"
+          label="Email"
+          type="email"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+          placeholder="you@example.com"
+          autoComplete="email"
+          required
+          disabled={loading || submitted}
+          error={error && !email ? 'Email is required' : undefined}
+        />
 
-        <div className="card space-y-6">
-          <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-            <Input
-              label="Email"
-              type="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="you@example.com"
-              autoComplete="email"
-              required
-              disabled={loading || submitted}
-              error={error && !email ? 'Email is required' : undefined}
-            />
-
-            <div>
-              <Input
-                label="Password"
-                type="password"
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                placeholder="••••••••"
-                autoComplete="current-password"
-                required
-                disabled={loading || submitted}
-                error={error && !password ? 'Password is required' : undefined}
-              />
-              <div className="mt-2 text-right">
-                <Link to="/forgot-password" className="link text-body-sm">
-                  Forgot password?
-                </Link>
-              </div>
-            </div>
-
-            {error && (
-              <div className="p-3 rounded-brand bg-life-red/10 border border-life-red/20 text-life-red text-body-sm" role="alert">
-                {error}
-              </div>
-            )}
-
-            <Button type="submit" className="w-full" size="lg" loading={loading || submitted}>
-              Sign In
-            </Button>
-          </form>
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-navy/30" />
-            </div>
-            <div className="relative flex justify-center text-body-sm">
-              <span className="bg-navy/50 px-4 text-muted-text">Or continue with</span>
-            </div>
+        <div>
+          <PasswordInput
+            variant="auth"
+            label="Password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            placeholder="Your password"
+            autoComplete="current-password"
+            required
+            disabled={loading || submitted}
+            error={error && !password ? 'Password is required' : undefined}
+          />
+          <div className="mt-2 text-right">
+            <Link to="/forgot-password" className="auth-link">
+              Forgot password?
+            </Link>
           </div>
-
-          <OAuthButtons disabled={loading || submitted} />
         </div>
 
-        <p className="mt-6 text-center text-body-sm text-muted-text">
-          New here? <Link to="/signup" className="link">Create an account</Link>
-        </p>
+        {error && (
+          <div className="auth-alert-error" role="alert">
+            {error}
+          </div>
+        )}
+
+        <Button
+          type="submit"
+          variant="secondary"
+          size="lg"
+          className="w-full rounded-control"
+          loading={loading || submitted}
+        >
+          Log in
+        </Button>
+      </form>
+
+      <div className="auth-divider">
+        <span>or continue with</span>
       </div>
-    </div>
+
+      <OAuthButtons disabled={loading || submitted} />
+
+      <p className="mt-6 text-center text-body-sm text-text-dim">
+        New here?{' '}
+        <Link to="/signup" className="font-medium text-choice-blue hover:text-choice-blue/80">
+          Create an account
+        </Link>
+      </p>
+    </AuthShell>
   )
 }

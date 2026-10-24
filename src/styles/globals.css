@@ -11,6 +11,26 @@
     --color-dark-bg: #11131C;
     --color-muted-text: #626776;
     --color-earth-accent: #8A6048;
+
+    /* Interface design tokens */
+    --bg-abyss: #0B0E16;
+    --grad-top: #1A2434;
+    --grad-mid: #121A28;
+    --grad-bottom: #0A0D14;
+    --surface-panel: rgba(15, 22, 34, 0.82);
+    --surface-input: #171F2C;
+    --surface-input-hover: #1C2636;
+    --border-subtle: rgba(148, 163, 184, 0.12);
+    --border-strong: rgba(148, 163, 184, 0.22);
+    --text-primary: #F5F1E8;
+    --text-secondary: #94A0B4;
+    --success: #3FB27F;
+    --focus-ring: rgba(39, 100, 216, 0.55);
+    --radius-panel: 1.25rem;
+    --radius-control: 0.75rem;
+    --shadow-panel: 0 24px 80px rgba(0, 0, 0, 0.55);
+    --duration-fast: 150ms;
+    --duration-base: 220ms;
   }
 
   html {
@@ -101,6 +121,92 @@
 
   .container-game {
     @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Authentication surface + shared dark-world tokens                   */
+  /* ------------------------------------------------------------------ */
+  .auth-shell {
+    position: relative;
+    min-height: 100dvh;
+    width: 100%;
+    overflow-x: hidden;
+    background:
+      radial-gradient(900px 520px at 50% -8%, rgba(39, 100, 216, 0.16), transparent 66%),
+      radial-gradient(760px 520px at 92% 112%, rgba(240, 68, 62, 0.08), transparent 62%),
+      linear-gradient(180deg, var(--grad-top) 0%, var(--grad-mid) 48%, var(--grad-bottom) 100%);
+  }
+
+  .auth-shell::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(1200px 640px at 50% 42%, transparent 42%, rgba(5, 7, 12, 0.55) 100%);
+  }
+
+  .auth-panel {
+    @apply relative rounded-panel border border-edge p-6 shadow-panel sm:p-8;
+    background: var(--surface-panel);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .auth-label {
+    @apply mb-2 block font-body text-body-sm font-medium text-warm-ivory/90;
+  }
+
+  .auth-input {
+    @apply w-full rounded-control border border-edge bg-input-bg px-4 py-3 text-body text-warm-ivory transition-all duration-brand placeholder:text-text-dim/60 focus:border-choice-blue focus:outline-none focus:ring-2 focus:ring-choice-blue/30 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .auth-input:hover:not(:disabled) {
+    background: var(--surface-input-hover);
+  }
+
+  .auth-btn-primary {
+    @apply inline-flex w-full items-center justify-center gap-2 rounded-control bg-choice-blue px-5 py-3.5 font-body font-semibold text-warm-ivory transition-all duration-brand hover:bg-choice-blue/90 focus:outline-none focus:ring-2 focus:ring-choice-blue focus:ring-offset-2 focus:ring-offset-abyss disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .auth-oauth-btn {
+    @apply inline-flex w-full items-center justify-center gap-2.5 rounded-control border border-edge bg-input-bg px-4 py-3 font-body text-body-sm font-medium text-warm-ivory transition-all duration-brand hover:border-edge-strong hover:bg-surface-raised focus:outline-none focus:ring-2 focus:ring-choice-blue/40 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .auth-link {
+    @apply text-body-sm text-text-dim transition-colors duration-brand hover:text-warm-ivory;
+  }
+
+  .auth-tab {
+    @apply flex-1 rounded-control px-4 py-2 text-center text-body-sm font-medium transition-all duration-brand focus:outline-none focus-visible:ring-2 focus-visible:ring-choice-blue/50;
+  }
+
+  .auth-tab-active {
+    @apply bg-warm-ivory/95 text-abyss shadow-sm;
+  }
+
+  .auth-tab-idle {
+    @apply text-text-dim hover:text-warm-ivory;
+  }
+
+  .auth-alert-error {
+    @apply rounded-control border border-life-red/30 bg-life-red/10 px-3 py-2.5 text-body-sm text-life-red;
+  }
+
+  .auth-alert-success {
+    @apply rounded-control border border-success/30 bg-success/10 px-3 py-2.5 text-body-sm text-success;
+  }
+
+  .auth-divider {
+    @apply relative my-6 flex items-center;
+  }
+
+  .auth-divider::before {
+    content: '';
+    @apply absolute inset-x-0 top-1/2 h-px bg-edge;
+  }
+
+  .auth-divider > span {
+    @apply relative mx-auto bg-surface px-3 text-caption uppercase tracking-wider text-text-dim;
   }
 }
 

@@ -1,3 +1,4 @@
+import { Suspense, lazy } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuth } from './lib/auth'
 import Layout from './components/Layout'
@@ -6,10 +7,23 @@ import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
-import GamePage from './pages/GamePage'
-import DemoGamePage from './pages/DemoGamePage'
 import PlaceholderPage from './pages/PlaceholderPage'
 import { AboutPage, WorldPage, FeaturesPage, RoadmapPage, JournalPage, FAQPage, TermsPage, PrivacyPage, ContactPage } from './pages/PublicPages'
+
+// Babylon is heavy; keep it out of the initial bundle for the landing/auth routes.
+const GamePage = lazy(() => import('./pages/GamePage'))
+const DemoGamePage = lazy(() => import('./pages/DemoGamePage'))
+
+function RouteFallback() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-abyss" role="status" aria-label="Loading">
+      <div className="space-y-4 text-center">
+        <div className="mx-auto h-11 w-11 animate-spin rounded-full border-2 border-choice-blue border-t-transparent" />
+        <p className="text-body-sm text-text-dim">Entering the world…</p>
+      </div>
+    </div>
+  )
+}
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth()
@@ -55,7 +69,8 @@ function PublicOnlyRoute({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <Routes>
+    <Suspense fallback={<RouteFallback />}>
+      <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/world" element={<WorldPage />} />
@@ -243,6 +258,7 @@ export default function App() {
       />
 
       <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
+      </Routes>
+    </Suspense>
   )
 }

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../lib/auth'
 import { Button, Input } from '../components/ui'
+import AuthShell from '../components/AuthShell'
 
 export default function ForgotPasswordPage() {
   const { resetPassword } = useAuth()
@@ -39,57 +40,70 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-dark-bg">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 text-warm-ivory hover:text-life-red transition-colors mb-6" aria-label="Nigeria Life Home">
-            <span className="text-3xl" aria-hidden="true">🌿</span>
-            <span className="font-display font-bold text-display-lg">Nigeria Life</span>
-          </Link>
-          <h1 className="heading-display text-display-lg mb-2">Reset Your Password</h1>
-          <p className="text-body text-muted-text">
-            Enter the email address for your account and we'll send a reset link.
+    <AuthShell
+      title="Reset your password"
+      tagline="We'll email you a secure link to choose a new one."
+    >
+      {sent ? (
+        <div className="space-y-4 text-center py-2" role="status">
+          <div
+            className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-success/30 bg-success/10 text-success"
+            aria-hidden="true"
+          >
+            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <path d="m4 7 8 6 8-6M4 6h16v12H4z" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+          <h2 className="font-display text-lg font-semibold text-warm-ivory">Check your inbox</h2>
+          <p className="text-body-sm text-text-dim">
+            If an account exists for <span className="text-warm-ivory">{email.trim()}</span>, a password reset
+            link is on its way. It may take a few minutes to arrive.
           </p>
+          <Link
+            to="/login"
+            className="inline-block text-body-sm font-medium text-choice-blue hover:text-choice-blue/80"
+          >
+            Back to log in
+          </Link>
         </div>
+      ) : (
+        <>
+          <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+            <Input
+              variant="auth"
+              label="Email"
+              type="email"
+              value={email}
+              onChange={e => {
+                setEmail(e.target.value)
+                if (fieldError) setFieldError('')
+              }}
+              placeholder="you@example.com"
+              autoComplete="email"
+              required
+              disabled={submitting}
+              error={fieldError || undefined}
+            />
 
-        <div className="card space-y-6">
-          {sent ? (
-            <div className="space-y-4 text-center py-4" role="status">
-              <div className="text-4xl" aria-hidden="true">📧</div>
-              <h2 className="font-display font-bold text-lg text-warm-ivory">Check your inbox</h2>
-              <p className="text-body-sm text-muted-text">
-                If an account exists for <span className="text-warm-ivory">{email.trim()}</span>, a password reset
-                link has been sent. It may take a few minutes to arrive.
-              </p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-              <Input
-                label="Email"
-                type="email"
-                value={email}
-                onChange={e => {
-                  setEmail(e.target.value)
-                  if (fieldError) setFieldError('')
-                }}
-                placeholder="you@example.com"
-                autoComplete="email"
-                required
-                disabled={submitting}
-                error={fieldError || undefined}
-              />
+            <Button
+              type="submit"
+              variant="secondary"
+              size="lg"
+              className="w-full rounded-control"
+              loading={submitting}
+            >
+              Send reset link
+            </Button>
+          </form>
 
-              <Button type="submit" className="w-full" size="lg" loading={submitting}>
-                Send Reset Link
-              </Button>
-            </form>
-          )}
-        </div>
-
-        <p className="mt-6 text-center text-body-sm text-muted-text">
-          Remembered it? <Link to="/login" className="link">Back to sign in</Link>
-        </p>
-      </div>
-    </div>
+          <p className="mt-6 text-center text-body-sm text-text-dim">
+            Remembered it?{' '}
+            <Link to="/login" className="font-medium text-choice-blue hover:text-choice-blue/80">
+              Back to log in
+            </Link>
+          </p>
+        </>
+      )}
+    </AuthShell>
   )
 }

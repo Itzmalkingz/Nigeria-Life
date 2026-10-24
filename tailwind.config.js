@@ -23,6 +23,15 @@ export default {
         'surface-light': '#F5F1E8',
         'surface-dark': '#11131C',
         'text-muted': '#626776',
+        // Interface tokens (dark world / auth surfaces)
+        'abyss': '#0B0E16',
+        'surface': '#0F1622',
+        'surface-raised': '#141C2A',
+        'input-bg': '#171F2C',
+        'edge': 'rgba(148, 163, 184, 0.12)',
+        'edge-strong': 'rgba(148, 163, 184, 0.22)',
+        'text-dim': '#94A0B4',
+        'success': '#3FB27F',
       },
       fontFamily: {
         display: ['Sora', 'system-ui', 'sans-serif'],
@@ -47,11 +56,15 @@ export default {
         'brand': '0.75rem',
         'brand-lg': '1rem',
         'brand-xl': '1.5rem',
+        'control': '0.75rem',
+        'panel': '1.25rem',
       },
       boxShadow: {
         'brand': '0 4px 14px rgba(32, 35, 49, 0.12)',
         'brand-lg': '0 10px 40px rgba(32, 35, 49, 0.18)',
         'focus': '0 0 0 3px rgba(39, 100, 216, 0.4)',
+        'panel': '0 24px 80px rgba(0, 0, 0, 0.55)',
+        'glow-blue': '0 0 40px rgba(39, 100, 216, 0.28)',
       },
       transitionDuration: {
         'brand': '200ms',

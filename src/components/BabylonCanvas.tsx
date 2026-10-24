@@ -11,9 +11,20 @@ interface BabylonCanvasProps {
    * scene module owns cameras, lighting, and world content (e.g. follow cam).
    */
   defaultSceneContent?: boolean
+  /** Rendered instead of the error panel when WebGL is unavailable (e.g. landing backdrop). */
+  fallback?: React.ReactNode
+  /** Minimum canvas height in px. Set 0 to fill a sized parent (landing backdrop). */
+  minHeight?: number
 }
 
-export function BabylonCanvas({ onSceneReady, className = '', style = {}, defaultSceneContent = true }: BabylonCanvasProps) {
+export function BabylonCanvas({
+  onSceneReady,
+  className = '',
+  style = {},
+  defaultSceneContent = true,
+  fallback,
+  minHeight = 400,
+}: BabylonCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const engineRef = useRef<Engine | null>(null)
   const sceneRef = useRef<import('@babylonjs/core').Scene | null>(null)
@@ -117,8 +128,15 @@ export function BabylonCanvas({ onSceneReady, className = '', style = {}, defaul
   }, [onSceneReady, defaultSceneContent])
 
   if (engineError) {
+    if (fallback) {
+      return (
+        <div className={`relative h-full w-full ${className}`} style={style}>
+          {fallback}
+        </div>
+      )
+    }
     return (
-      <div className={`relative w-full h-full min-h-[400px] ${className}`} style={{ ...style, minHeight: '400px' }}>
+      <div className={`relative w-full h-full min-h-[400px] ${className}`} style={{ ...style, minHeight: `${Math.max(minHeight, 400)}px` }}>
         <div className="absolute inset-0 flex items-center justify-center bg-dark-bg text-center p-6 rounded-brand-xl border border-life-red/50">
           <div className="space-y-3">
             <div className="text-4xl" aria-hidden="true">⚠️</div>
@@ -137,23 +155,23 @@ export function BabylonCanvas({ onSceneReady, className = '', style = {}, defaul
   }
 
   return (
-    <div className={`relative w-full ${className}`} style={style}>
+    <div className={`relative w-full h-full ${className}`} style={style}>
       <canvas
         ref={canvasRef}
         className="w-full h-full block touch-none"
         style={{
           width: '100%',
           height: '100%',
-          minHeight: '400px',
+          minHeight: `${minHeight}px`,
           display: 'block',
         }}
         aria-label="Life in Africa 3D world view"
       />
       {!isInitialized && (
-        <div className="absolute inset-0 flex items-center justify-center bg-[#0e1017] z-10">
-          <div className="text-center space-y-3 text-muted-text">
-            <div className="w-10 h-10 border-3 border-life-red border-t-transparent rounded-full animate-spin mx-auto" />
-            <p className="text-body-sm">Initializing 3D engine…</p>
+        <div className="absolute inset-0 flex items-center justify-center bg-abyss z-10">
+          <div className="text-center space-y-3 text-text-dim">
+            <div className="w-10 h-10 border-2 border-life-red border-t-transparent rounded-full animate-spin mx-auto" />
+            <p className="text-body-sm">Building the world…</p>
           </div>
         </div>
       )}
